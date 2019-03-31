@@ -1,14 +1,15 @@
 import moment from 'moment';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 // import { Message } from './types';
 
-// import irc from 'irc';
+import irc from 'irc';
 
 export default new class MessagesService {
     /** @type {Message} */
     _allMesseges = [];
     /** @type {Observable} */
     _subscription;
+    _ircClient;
 
     constructor() {
         this._allMesseges = [
@@ -48,8 +49,48 @@ export default new class MessagesService {
         return this._allMesseges.slice();
     }
 
+    /** @returns {Subscription} */
     getMessageSubscription() {
         return this._subscription;
+    }
+
+    // IRC JS docs https://node-irc.readthedocs.io/en/latest/API.html#client
+    connect(addres, nick, password) {
+        let client = new irc.Client(addres, nick, {
+            channels: ['#testchannel']
+        });
+
+        client.addListener('registered', (message) => {
+            console.log(message);
+        });
+
+        client.addListener('message', (from, to, message) => {
+            console.log('from', from);
+            console.log('to', to);
+            console.log('message', message);
+        });
+
+        client.addListener('error', () => {
+            console.log('Error!');
+        });
+
+        this._ircClient = client;
+    }
+
+    /** @returns {Boolean} if sending succeded */
+    sendMessage(target, message) {
+        if (!this._ircClient) {
+            console.error('Error! Client not connected!');
+            return false;
+        }
+        console.log('Send', this._ircClient.say(target, message));
+        return true;
+    }
+
+    disconnect() {
+        if (this._ircClient) {
+            this._ircClient.disconnect();
+        }
     }
 }
 

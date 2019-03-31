@@ -3,11 +3,11 @@
         <img alt="Vue logo" src="../../assets/logo.png" style="max-width: 185px;">
         <h2>Welcome<br>adventurer</h2>
         <div class="form-wrapper">
-            <InputForm :label="'URL'" v-model="url"/>
-            <InputForm :type="'login'" :label="'Login'" v-model="login"/>
-            <InputForm :type="'password'" :label="'Password'" v-model="password"/>
+            <InputForm :textAlign="'center'" :label="'URL'" v-model="url"/>
+            <InputForm :textAlign="'center'" :type="'login'" :label="'Nick'" v-model="nick"/>
+            <InputForm :textAlign="'center'" :type="'password'" :label="'Password'" v-model="password"/>
         </div>
-        <ButtonDefault class="login-button" :text="'Login'" @on-click="onLogin"/>
+        <ButtonDefault class="login-button" :disabled="btnDisabled" :text="'Login'" @on-click="onLogin"/>
     </div>
 </template>
 
@@ -17,9 +17,9 @@ import ButtonDefault from '../../components/ButtonDefault.vue'
 import { mapState, mapActions } from 'vuex';
 
 const data = {
-    login: '',
+    nick: '',
     password: '',
-    url: ''
+    url: 'arkadianclockwork.ddns.net'
 };
 
 export default {
@@ -28,13 +28,19 @@ export default {
         ButtonDefault
     },
     name: 'Login',
-    computed: mapState('auth', {
-        authenticated: 'authenticated',
-    }),
+    computed: {
+        ...mapState('auth', {
+            authenticated: 'authenticated'
+        }),
+        btnDisabled() {
+            return !(this.nick && this.url);
+        },
+    },
     data: () => data,
     methods: {
         onLogin() {
-            this.loginAction({ login: this.login, password: this.password, url: this.url }).then(verified => {
+            // arkadianclockwork.ddns.net
+            this.loginAction({ nick: this.nick, password: this.password, url: this.url }).then(verified => {
                 if (verified) {
                     this.$router.push({ name: 'chat' })
                 } else {
@@ -71,6 +77,7 @@ export default {
     h2 { text-align: center; text-transform: uppercase; font-size: 28px; }
     .form-wrapper {
         width: 100%; display: flex; align-items: center; flex-direction: column;
+        input { text-align: center; }
     }
 
     .login-button { margin-top: 20px; }

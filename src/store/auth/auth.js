@@ -1,3 +1,5 @@
+import MessagesService from '../../services/messages-service';
+
 export const auth = {
     namespaced: true,
     state: {
@@ -23,13 +25,15 @@ export const auth = {
         login({ commit }, payload) {
             commit('logging', payload);
             return new Promise( (resolve, reject) => {
-                setTimeout(() => {
-                    commit('userAuthenticated');
-                    resolve(true);
-                }, 500);
+                MessagesService.connect(payload['addres'], payload['nick'], null);
+                commit('userAuthenticated');
+                // setTimeout(() => {
+                //     resolve(true);
+                // }, 500);
             });
         },
         logout({ commit }) {
+            MessagesService.disconnect();
             commit('userLogout');
         }
     }

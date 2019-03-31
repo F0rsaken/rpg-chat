@@ -1,7 +1,7 @@
 <template>
     <div class="input-wrapper">
         <p v-if="true">{{ label }}</p>
-        <input :type="type" :value="value" @input="onInputChanged">
+        <input :style="{ 'text-align': textAlign }" :type="type" :value="value" @input="onInputChanged">
     </div>
 </template>
 
@@ -19,7 +19,11 @@ export default {
             type: String,
             default: 'text'
         },
-        value: String
+        value: String,
+        textAlign: {
+            type: String,
+            default: 'left'
+        }
         // value: 
     },
     methods: {
