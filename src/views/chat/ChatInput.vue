@@ -23,6 +23,7 @@ export default {
     methods: {
         sendMessage() {
             MessagesService.sendMessage('#testchannel', this.textInput);
+            this.textInput = '';
         }
     }
 }
