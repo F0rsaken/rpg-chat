@@ -4565,6 +4565,11 @@ ipaddr.js@^1.9.0:
   resolved "https://registry.yarnpkg.com/ipaddr.js/-/ipaddr.js-1.9.0.tgz#37df74e430a0e47550fe54a2defe30d8acd95f65"
   integrity sha512-M4Sjn6N/+O6/IXSJseKqHoFc+5FdGJ22sXqnjTpdZweHK64MzEPAyQZyEU3R/KRv2GLoa7nNtg/C2Ev6m7z+eA==
 
+irc-replies@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/irc-replies/-/irc-replies-2.0.1.tgz#5bf4125fb6ec0f3929a89647b26e653232942b79"
+  integrity sha1-W/QSX7bsDzkpqJZHsm5lMjKUK3k=
+
 is-absolute-url@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/is-absolute-url/-/is-absolute-url-2.1.0.tgz#50530dfb84fcc9aa7dbe7852e83a37b93b9f2aa6"
@@ -5130,6 +5135,11 @@ lie@~3.3.0:
   integrity sha512-UaiMJzeWRlEujzAuw5LokY1L5ecNQYZKfmyZ9L7wDHb/p5etKaxXhohBcrw0EYby+G/NA52vRSN4N39dxHAIwQ==
   dependencies:
     immediate "~3.0.5"
+
+linewise@0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/linewise/-/linewise-0.0.3.tgz#bf967ba0dd31faaf09ab5bdb3676ad7f2aa18493"
+  integrity sha1-v5Z7oN0x+q8Jq1vbNnatfyqhhJM=
 
 load-json-file@^1.0.0:
   version "1.1.0"
@@ -7560,6 +7570,23 @@ slash@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/slash/-/slash-2.0.0.tgz#de552851a1759df3a8f206535442f5ec4ddeab44"
   integrity sha512-ZYKh3Wh2z1PpEXWr0MpSBZ0V6mZHAQfYevttO11c51CaWjGTaadiKZ+wVt1PbMlDV5qhMFslpZCemhwOK7C89A==
+
+slate-irc-parser@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/slate-irc-parser/-/slate-irc-parser-0.1.0.tgz#9aa3b0d2bd8e0ed9fddc98808b6d449f12541c43"
+  integrity sha1-mqOw0r2ODtn93JiAi21EnxJUHEM=
+  dependencies:
+    debug "^2.2.0"
+    linewise "0.0.3"
+
+slate-irc@^0.9.0:
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/slate-irc/-/slate-irc-0.9.0.tgz#a70eaaf48e7be6dae6a87540bb7fcb4aaed9dcfc"
+  integrity sha1-pw6q9I575trmqHVAu3/LSq7Z3Pw=
+  dependencies:
+    debug "^2.2.0"
+    irc-replies "^2.0.1"
+    slate-irc-parser "^0.1.0"
 
 snapdragon-node@^2.0.1:
   version "2.1.1"

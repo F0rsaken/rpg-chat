@@ -54,7 +54,7 @@ export default {
     created() {
         if (!this.authenticated) console.error('User not authenticated');
 
-        messagesObservable = MessagesService.getMessageSubscription().subscribe(message => {
+        messagesObservable = MessagesService.getMessageSubject().subscribe(message => {
             this.messages.unshift(message);
         }, err => {
             console.log('error', err);

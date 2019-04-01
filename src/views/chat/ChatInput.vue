@@ -1,13 +1,14 @@
 <template>
     <div class="chat-input-wrapper">
         <input type="text" v-model="textInput">
-        <ButtonDefault class="send-button" :text="'Send'"></ButtonDefault>
+        <ButtonDefault class="send-button" :text="'Send'" @on-click="sendMessage"></ButtonDefault>
     </div>
 </template>
 
 <script>
 import Vue from 'vue';
 import ButtonDefault from '../../components/ButtonDefault.vue';
+import MessagesService from '../../services/messages-service.js';
 
 const data = {
     textInput: ''
@@ -18,7 +19,12 @@ export default {
     components: {
         ButtonDefault
     },
-    data: () => data
+    data: () => data,
+    methods: {
+        sendMessage() {
+            MessagesService.sendMessage('#testchannel', this.textInput);
+        }
+    }
 }
 </script>
 

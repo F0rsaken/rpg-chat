@@ -17,19 +17,28 @@ export const auth = {
             state.authenticated = true;
             state.userId = 0;
         },
+        userUnauthorized(state) {
+            state.logging = false;
+            state.authenticated = false;
+        },
         userLogout(state) {
             state.authenticated = false;
+            state.userId = null;
         }
     },
     actions: {
         login({ commit }, payload) {
             commit('logging', payload);
             return new Promise( (resolve, reject) => {
-                MessagesService.connect(payload['addres'], payload['nick'], null);
-                commit('userAuthenticated');
-                // setTimeout(() => {
-                //     resolve(true);
-                // }, 500);
+                console.log(payload);
+                MessagesService.connect(payload['url'], payload['nick'], null).then(() => {
+                    console.log('auth finished!');
+                    commit('userAuthenticated');
+                    resolve(true);
+                }).catch(() => {
+                    commit('userUnauthorized');
+                    reject(false);
+                });
             });
         },
         logout({ commit }) {
