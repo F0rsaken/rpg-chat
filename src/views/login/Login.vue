@@ -30,10 +30,11 @@ export default {
     name: 'Login',
     computed: {
         ...mapState('auth', {
-            authenticated: 'authenticated'
+            authenticated: 'authenticated',
+            logging: 'logging'
         }),
         btnDisabled() {
-            return !(this.nick && this.url);
+            return !(this.nick && this.url && (!this.logging));
         },
     },
     data: () => data,

@@ -1,28 +1,12 @@
 <template>
     <div class="messages-wrapper">
         <div class="messages-inner-wrapper">
-            <!-- <div v-for="message in messages" class="single-message"></div> -->
-            <div v-for="message in messages" :key="message.id"
-                class="single-message" :class="{ 'user-message': message.sendBy === userId }">
+            <div v-for="message in messages" class="single-message"
+                :key="message.id" :class="{ 'user-message': message.sendBy === userId }">
                 <p class="single-message__content">
                     {{ message.text }}
                 </p>
             </div>
-            <!-- <div class="single-message">TEST</div>
-            <div class="single-message">DŁUGI TEST</div>
-            <div class="single-message">eli, mordeczki, co tam, joł, dobry, Lorem ipsum itp ite de, jak to mówią, carpe diem, czy coś</div>
-            <div class="single-message">TEST</div>
-            <div class="single-message">DŁUGI TEST</div>
-            <div class="single-message">eli, mordeczki, co tam, joł, dobry, Lorem ipsum itp ite de, jak to mówią, carpe diem, czy coś</div>
-            <div class="single-message">TEST</div>
-            <div class="single-message">DŁUGI TEST</div>
-            <div class="single-message">eli, mordeczki, co tam, joł, dobry, Lorem ipsum itp ite de, jak to mówią, carpe diem, czy coś</div>
-            <div class="single-message">TEST</div>
-            <div class="single-message">DŁUGI TEST</div>
-            <div class="single-message">eli, mordeczki, co tam, joł, dobry, Lorem ipsum itp ite de, jak to mówią, carpe diem, czy coś</div>
-            <div class="single-message">TEST</div>
-            <div class="single-message">DŁUGI TEST</div>
-            <div class="single-message">eli, mordeczki, co tam, joł, dobry, Lorem ipsum itp ite de, jak to mówią, carpe diem, czy coś</div> -->
             <div class="message-filler"></div>
         </div>
     </div>
@@ -68,37 +52,6 @@ export default {
     }
 };
 
-
-
-// const authModule = namespace('authModule');
-
-// @Component({})
-// export class Messages extends Vue {
-//     // public messages = [];
-//     // @authModule.State('userId') public userId: number;
-//     // @authModule.State('authenticated') public authenticated: boolean;
-
-//     private messagesObservable: Subscription;
-
-//     created() {
-//         if (!this.authenticated) console.error('User not authenticated');
-
-//         this.messagesObservable = MessagesService.getMessageSubscription().subscribe((message: Message) => {
-//             // console.log(message);
-//             this.messages.unshift(message);
-//         }, err => {
-//             console.log('error', err);
-//         }, () => {
-//             console.log('complete');
-//         })
-//         // console.log(MessagesService);
-//         // this.$getService('test');
-//     }
-
-//     destroyed() {
-//         this.messagesObservable.unsubscribe();
-//     }
-// }
 </script>
 
 <style lang="scss" scoped>
