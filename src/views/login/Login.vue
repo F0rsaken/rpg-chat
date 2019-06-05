@@ -3,9 +3,10 @@
         <img alt="Vue logo" src="../../assets/logo.png" style="max-width: 185px;">
         <h2>Welcome<br>adventurer</h2>
         <div class="form-wrapper">
-            <!-- <InputForm :textAlign="'center'" :label="'URL'" v-model="url"/> -->
+            <InputForm :textAlign="'center'" :label="'IP'" v-model="ip"/>
             <InputForm :textAlign="'center'" :type="'login'" :label="'Nick'" v-model="nick"/>
             <!-- <InputForm :textAlign="'center'" :type="'password'" :label="'Password'" v-model="password"/> -->
+            <p v-if="error" class="error">{{ 'some error' }}</p>
         </div>
         <ButtonDefault class="login-button" :disabled="btnDisabled" :text="'Login'" @on-click="onLogin"/>
     </div>
@@ -21,7 +22,8 @@ import to from 'await-to-js';
 const data = {
     nick: '',
     password: '',
-    url: 'arkadianclockwork.ddns.net'
+    ip: '',
+    error: null
 };
 
 export default {
@@ -36,18 +38,21 @@ export default {
             logging: 'logging'
         }),
         btnDisabled() {
-            return !(this.nick && this.url && (!this.logging));
+            return !(this.nick && this.ip && (!this.logging));
         },
     },
     data: () => data,
     methods: {
         onLogin() {
+            this.setApi({ api: `http://${this.ip}` });
+
             this.loginAction({ nick: this.nick }).then(res => {
                 this.setRoomId(res.roomId);
                 this.$router.push({ name: 'chat' })
             }).catch(error => {
                 console.log('Error logging user!');
-                console.log(error);
+                console.log(error.message);
+                this.error = error.message;
             });
         },
         ...mapActions('auth', {
@@ -61,7 +66,7 @@ export default {
         })
     },
     created() {
-        this.setApi({ api: 'http://localhost:4500' });
+        // this.setApi({ api: 'http://localhost:4500' });
     }
 }
 
@@ -89,6 +94,8 @@ export default {
     .form-wrapper {
         width: 100%; display: flex; align-items: center; flex-direction: column;
         input { text-align: center; }
+
+        .error { color: red; font-size: 13px; }
     }
 
     .login-button {
