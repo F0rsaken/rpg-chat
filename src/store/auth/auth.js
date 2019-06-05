@@ -54,8 +54,8 @@ export const auth = {
             commit('changeWSAddress', { ws: res.data.address });
             return res.data;
         },
-        logout({ commit }) {
-            // MessagesService.disconnect();
+        async logout({ commit }) {
+            let [err, res] = await to(ApiMethods.disconnect());
             commit('userLogout');
         }
     }

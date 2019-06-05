@@ -44,7 +44,11 @@ export default {
     data: () => data,
     methods: {
         onLogin() {
-            this.setApi({ api: `http://${this.ip}` });
+            if (this.ip.indexOf('http') === -1) {
+                this.setApi({ api:  `http://${this.ip}` });
+            } else {
+                this.setApi({ api:  `${this.ip}` });
+            }
 
             this.loginAction({ nick: this.nick }).then(res => {
                 this.setRoomId(res.roomId);

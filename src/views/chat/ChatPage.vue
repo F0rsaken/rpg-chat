@@ -50,8 +50,9 @@ export default {
             fetchData: 'fetchData'
         }),
         onLogout() {
-            this.logout();
-            this.$router.push({ name: 'login' });
+            this.logout().then(() => {
+                this.$router.push({ name: 'login' });
+            });
         }
     },
     created() {

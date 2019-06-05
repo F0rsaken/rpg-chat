@@ -1,7 +1,7 @@
 <template>
     <div class="chat-input-wrapper">
         <div ref="textarea" class="textarea-wrapper">
-            <InputDisplay ref="inputDisplay" :key="refresh"/>
+            <InputDisplay ref="inputDisplay" :key="refresh" @keydown.native="onEnterPress" />
             <ButtonDefault class="send-button" :text="'Send'" @on-click="sendMessage"></ButtonDefault>
         </div>
         <div class="module-buttons-wrapper">
@@ -53,8 +53,9 @@ export default {
         },
 
         onEnterPress(event) {
-            if (event.charCode !== 13) return;
+            if (event.keyCode !== 13) return;
             
+            event.preventDefault();
             this.sendMessage();
         },
     },

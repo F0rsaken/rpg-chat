@@ -16,6 +16,12 @@ export default new class API_MTEHODS {
         return axios.post(`${this.API_ADDRESS}/chat-rooms/connect`, { roomName, password, userId, token });
     }
 
+    disconnect() {
+        let roomId = store.state.chatRoom.roomId;
+        let userId = store.state.auth.userId;
+        return axios.post(`${this.API_ADDRESS}/chat-rooms/disconnect`, { roomId, userId });
+    }
+
     roomDetails(roomId) {
         return axios.get(`${this.API_ADDRESS}/chat-rooms/details/${roomId}`);
     }
