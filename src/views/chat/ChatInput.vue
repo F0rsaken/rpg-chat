@@ -74,6 +74,7 @@ export default {
     .textarea-wrapper {
         width: 100%;
         display: flex;
+        min-height: fit-content;
     }
 
     .send-button {

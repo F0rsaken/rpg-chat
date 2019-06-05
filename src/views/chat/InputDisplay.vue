@@ -202,6 +202,7 @@ export default {
         },
         clear() {
             this.innerContent = '';
+            if (displayParser.fullState.length === 1) this.$refs.textarea.removeChild(this.$refs.textarea.firstChild);
         }
     }
 }

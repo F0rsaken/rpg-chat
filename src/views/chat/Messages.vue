@@ -105,6 +105,7 @@ export default {
             max-width: 55%;
             display: flex;
             flex-direction: column;
+            min-height: fit-content;
 
             &:first-of-type { margin-bottom: 0; }
 
