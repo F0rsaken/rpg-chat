@@ -1,21 +1,22 @@
-import MessagesService from '../../services/messages-service';
+import ApiMethods from "../../services/api-methods";
+import to from 'await-to-js';
 
 export const auth = {
     namespaced: true,
     state: {
+        webSocketAddress: '',
         authenticated: false,
         logging: false,
         userId: null
     },
     mutations: {
-        logging(state, payload) {
+        logging(state) {
             state.logging = true;
-            // console.log('logging', payload);
         },
-        userAuthenticated(state) {
+        userAuthenticated(state, payload) {
             state.logging = false;
             state.authenticated = true;
-            state.userId = 0;
+            state.userId = payload.id;
         },
         userUnauthorized(state) {
             state.logging = false;
@@ -24,25 +25,37 @@ export const auth = {
         userLogout(state) {
             state.authenticated = false;
             state.userId = null;
+        },
+        changeWSAddress(state, payload) {
+            state.webSocketAddress = payload.ws;
         }
     },
     actions: {
-        login({ commit }, payload) {
-            commit('logging', payload);
-            return new Promise( (resolve, reject) => {
-                console.log(payload);
-                MessagesService.connect(payload['url'], payload['nick'], null).then(() => {
-                    console.log('auth finished!');
-                    commit('userAuthenticated');
-                    resolve(true);
-                }).catch(() => {
-                    commit('userUnauthorized');
-                    reject(false);
-                });
-            });
+        async login({ commit, state }, payload) {
+            commit('logging');
+            let res, err;
+            [err, res] = await to(ApiMethods.login(payload.nick));
+
+            if (err) {
+                commit('userUnauthorized');
+                throw err;
+            }
+            let user = res.data;
+            if (state.authenticated) user.id = state.userId;
+
+            [err, res] = await to(ApiMethods.connect('Test', 'admin', user.id, user.token));
+
+            if (err) {
+                commit('userUnauthorized');
+                throw err;
+            }
+
+            commit('userAuthenticated', { id: user.id });
+            commit('changeWSAddress', { ws: res.data.address });
+            return res.data;
         },
         logout({ commit }) {
-            MessagesService.disconnect();
+            // MessagesService.disconnect();
             commit('userLogout');
         }
     }

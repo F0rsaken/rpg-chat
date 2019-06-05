@@ -1,15 +1,16 @@
 import moment from 'moment';
 import { Subject } from 'rxjs';
-// import WebSocket from 'ws';
-import store from '../store/store';
+
+const irc = require('slate-irc');
+const net = require('net');
 
 class _MessagesService {
     /** @type {Messages.Message[]} */
     _allMessages = [];
     /** @type {Subject} */
     _subject;
-    /** @type {WebSocket} */
-    _ws;
+    /** @type {irc.Client} */
+    _ircClient;
 
     constructor() {
         this._allMesseges = [];
@@ -24,68 +25,69 @@ class _MessagesService {
         return this._subject;
     }
 
+    // IRC JS docs https://node-irc.readthedocs.io/en/latest/API.html#client
+    connect(address, nick, password) {
 
-    connect(wsAddress) {
-        // const ws = new WebSocket(wsAddress);
-        console.log(wsAddress);
-        const ws = new WebSocket(wsAddress + `?id=${store.state.auth.userId}`);
-        ws.onopen = () => {
-            console.log('opened!');
-        }
+        return new Promise((resolve, reject) => {
+            let stream = net.connect({ port: 6667, host: address });
+            let client = irc(stream);
+            client.nick(nick);
+            client.user('majlo', 'My Real Name');
+            if (password) client.pass(password);
+            client.join('#testchannel');
 
-        ws.onmessage = (ev) => {
-            let msg = JSON.parse(ev.data);
-            if (msg.type === MSG_TYPES.clientJoin) {
-                store.dispatch('chatRoom/addUser', { user: msg.user});
-            } else if (msg.type === MSG_TYPES.clientLeft) {
+            // let newMessage = { test: 'test' };
+            client.on('message', (msg) => {
+                console.log('message', msg);
+                let newMessage = { text: msg.message, sendBy: msg.from, receivedTime: moment() };
+                this._addMessage(newMessage);
+            });
 
-            } else {
-                this._addMessage(msg);
-            }
-        }
+            client.on('data', (msg) => {
+                console.log('data', msg);
+            });
 
-        ws.onerror = (ev) => {
-            console.log('Error!');
-            console.log(ev);
-        }
+            client.on('join', (msg) => {
+                console.log('join', msg);
+                if (msg.nick === nick) {
+                    client.on('join', (msg) => {
+                        console.log('New client!', msg);
+                    });
+                    resolve(true);
+                } else {
+                    console.log('another client', msg);
+                }
+            });
 
-        this._ws = ws;
+            this._ircClient = client;
+        });
     }
 
-    sendMessage(message) {
-        if (!this._ws) {
+    sendMessage(target, message) {
+        if (!this._ircClient) {
             console.error('Error! Client not connected!');
             return false;
         }
-
-        let msgObj = { message, from: { id: store.state.auth.userId }, time: moment() }
-
-        this._ws.send(JSON.stringify({ type: MSG_TYPES.message, ...msgObj }))
-        this._addMessage({ ...msgObj });
+        this._ircClient.send(target, message);
+        this._addMessage({ text: message, sendBy: 0, sendTime: moment() });
         return true;
     }
 
-    /** @param {Messages.Message} msg */
     _addMessage(msg) {
         this._allMesseges.push(msg);
         this._subject.next(msg);
     }
 
     disconnect() {
-        if (this._ws) {
-            this._ws.close();
+        if (this._ircClient) {
+            this._ircClient.quit('quit');
         }
     }
 }
 
-// /** @type {Messages.MessagesService} */
+/** @type {Messages.MessagesService} */
 export const MessagesService = new _MessagesService();
-
-const MSG_TYPES = {
-    clientJoin: 0,
-    clientLeft: 1,
-    message: 2
-}
+// export service;
 
 /*
 // var s = "Ala ma kota"

@@ -3,9 +3,9 @@
         <img alt="Vue logo" src="../../assets/logo.png" style="max-width: 185px;">
         <h2>Welcome<br>adventurer</h2>
         <div class="form-wrapper">
-            <InputForm :textAlign="'center'" :label="'URL'" v-model="url"/>
+            <!-- <InputForm :textAlign="'center'" :label="'URL'" v-model="url"/> -->
             <InputForm :textAlign="'center'" :type="'login'" :label="'Nick'" v-model="nick"/>
-            <InputForm :textAlign="'center'" :type="'password'" :label="'Password'" v-model="password"/>
+            <!-- <InputForm :textAlign="'center'" :type="'password'" :label="'Password'" v-model="password"/> -->
         </div>
         <ButtonDefault class="login-button" :disabled="btnDisabled" :text="'Login'" @on-click="onLogin"/>
     </div>
@@ -15,6 +15,8 @@
 import InputForm from '../../components/InputForm.vue'
 import ButtonDefault from '../../components/ButtonDefault.vue'
 import { mapState, mapActions } from 'vuex';
+import axios from 'axios';
+import to from 'await-to-js';
 
 const data = {
     nick: '',
@@ -40,18 +42,26 @@ export default {
     data: () => data,
     methods: {
         onLogin() {
-            // arkadianclockwork.ddns.net
-            this.loginAction({ nick: this.nick, password: this.password, url: this.url }).then(verified => {
-                if (verified) {
-                    this.$router.push({ name: 'chat' })
-                } else {
-                    console.error('Auth didn\'t success');
-                }
-            })
+            this.loginAction({ nick: this.nick }).then(res => {
+                this.setRoomId(res.roomId);
+                this.$router.push({ name: 'chat' })
+            }).catch(error => {
+                console.log('Error logging user!');
+                console.log(error);
+            });
         },
         ...mapActions('auth', {
             loginAction: 'login'
+        }),
+        ...mapActions('chatRoom', {
+            setRoomId: 'setRoomId'
+        }),
+        ...mapActions({
+            setApi: 'setApiAddress'
         })
+    },
+    created() {
+        this.setApi({ api: 'http://localhost:4500' });
     }
 }
 
@@ -81,6 +91,9 @@ export default {
         input { text-align: center; }
     }
 
-    .login-button { margin-top: 20px; }
+    .login-button {
+        margin-top: 20px;
+        &:disabled { opacity: 0.5; cursor: default; }
+    }
 }
 </style>
