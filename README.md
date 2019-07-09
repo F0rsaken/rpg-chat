@@ -1,8 +1,7 @@
 # RPGChat
 ## Goals
-- p2p functionality
-- server functionality (dedicated)?
-- may work on irc server
+- server functionality
+- optional p2p functionality
 - ability to add:
 	- pictures
 	- gifs
